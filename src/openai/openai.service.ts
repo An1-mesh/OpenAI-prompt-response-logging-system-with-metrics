@@ -15,7 +15,7 @@ export class OpenaiService {
           { role: 'system', content: 'You are a helpful assistant.' },
           {role: 'user', content: prompt},
         ],
-        max_tokens: 100, // Adjust as needed
+        max_tokens: 300, // Adjust as needed
       });
 
       console.log('Query completed!')
