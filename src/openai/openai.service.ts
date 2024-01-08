@@ -7,7 +7,7 @@ export class OpenaiService {
     apiKey: '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',
   });
 
-  async queryOpenai(prompt: string, model: string): Promise<string> {
+  async queryOpenai(prompt: string, model: string): Promise<Record<string, string>> {
     try {
       const response = await this.openai.chat.completions.create({
         model: model,
@@ -20,10 +20,11 @@ export class OpenaiService {
 
       console.log('Query completed!')
 
-      return response.choices[0]?.message?.content || '';
+      return { status: '200', content: response.choices[0]?.message?.content || '' }
     } catch (error) {
       console.error('Error calling OpenAI API:', error.message);
-      throw new Error('Error calling OpenAI API');
+      // throw new Error('Error calling OpenAI API');
+      return { status: '404', content: error.message }
     }
   }
 }

@@ -16,12 +16,15 @@ export class AppController {
     try {
       const response = await this.openaiService.queryOpenai(body.prompt, body.metadata.model);
 
+      const status_code = response.status;
+      // console.log(status_code)
+
       // Log to ClickHouse
-      await this.clickhouseService.logRequest(body.prompt, response, body.metadata, Date.now() - start);
+      await this.clickhouseService.logRequest(body.prompt, response.content, body.metadata, Date.now() - start);
 
       console.log('OpenAI query and Clickhouse logging successful!');
 
-      return response;
+      return response.content;
     } catch (error) {
       // Handle errors
       console.error(error);
