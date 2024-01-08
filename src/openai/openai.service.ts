@@ -7,10 +7,10 @@ export class OpenaiService {
     apiKey: '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',
   });
 
-  async queryOpenai(prompt: string): Promise<string> {
+  async queryOpenai(prompt: string, model: string): Promise<string> {
     try {
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: model,
         messages: [
           { role: 'system', content: 'You are a helpful assistant.' },
           {role: 'user', content: prompt},

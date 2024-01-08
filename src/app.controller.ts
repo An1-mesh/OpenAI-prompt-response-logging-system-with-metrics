@@ -14,8 +14,7 @@ export class AppController {
     const start = Date.now();
 
     try {
-      const response = await this.openaiService.queryOpenai(body.prompt);
-      // const response = 'hoping this works';
+      const response = await this.openaiService.queryOpenai(body.prompt, body.metadata.model);
 
       // Log to ClickHouse
       await this.clickhouseService.logRequest(body.prompt, response, body.metadata, Date.now() - start);
