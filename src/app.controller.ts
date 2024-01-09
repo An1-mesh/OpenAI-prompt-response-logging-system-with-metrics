@@ -11,14 +11,14 @@ export class AppController {
   ) {}
 
   @Post('query')
-  async queryOpenaiAndLog(@Body() body: { prompt: string, metadata: Record<string, any> }): Promise<string> {
+  async queryOpenaiAndLog(@Body() body: { prompt: string, model: string }): Promise<string> {
     const start = Date.now();
 
     try {
-      const response = await this.openaiService.queryOpenai(body.prompt, body.metadata.model);
+      const response = await this.openaiService.queryOpenai(body.prompt, body.model);
 
       // Log to ClickHouse
-      await this.clickhouseService.logRequest(body.prompt, response.content, body.metadata, Date.now() - start);
+      await this.clickhouseService.logRequest(body.prompt, response.content, body.model, Date.now() - start);
 
       console.log('OpenAI query and Clickhouse logging successful!');
 

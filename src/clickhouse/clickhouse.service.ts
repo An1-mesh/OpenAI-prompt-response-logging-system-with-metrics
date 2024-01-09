@@ -19,23 +19,24 @@ export class ClickhouseService {
     });
   }
 
-  async logRequest(prompt: string, response: string, metadata: Record<string, any>, latency: number): Promise<void> {
+  async logRequest(prompt: string, response: string, model: string, latency: number): Promise<void> {
     try {
-      const tokenCount = response.split(' ').length;
-      const id = uuidv4(); // Generate a unique UUID
+      const promptTokenCount = prompt.split(' ').length;
+      const tokenCount = response.split(' ').length + promptTokenCount;
 
       // Execute the INSERT query
       await this.client.insert({
-        table: 'requests',
+        table: 'logs',
         format: 'JSON',
         values: [{
-          id: id,
-          prompt: prompt,
-          response: response,
-          token_count: tokenCount,
-          metadata: JSON.stringify(metadata),
-          latency: latency,
           created_at: new Date(),
+          status: true,
+          request: prompt,
+          response: response,
+          model: model,
+          total_tokens: tokenCount,
+          prompt_tokens: promptTokenCount,
+          latency: latency,
         }],
       })
 
@@ -56,7 +57,7 @@ export class ClickhouseService {
       const result = await this.client.query({
         query: `
         SELECT *
-        FROM requests
+        FROM logs
         WHERE created_at BETWEEN {start_date: DateTime}
         AND {end_date: DateTime}
         ORDER BY created_at DESC

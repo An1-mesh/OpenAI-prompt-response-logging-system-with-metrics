@@ -17,8 +17,6 @@ st.markdown("# OpenAI Query Tab")
 # User input boxes
 prompt = st.text_input("Enter Prompt:")
 model = st.selectbox("Select Model:", openai_models)
-environment = st.selectbox("Select Environment:", ["Production", "Development"])
-user = st.text_input("Enter User:")
 
 # Log Query Button
 log_query_button = st.button("Send Query", key="log_query_button")
@@ -27,14 +25,9 @@ log_query_button = st.button("Send Query", key="log_query_button")
 def log_query():
     query_payload = {
         'prompt': prompt,
-        'metadata': {
-            'user': user,
-            'environment': environment,
-            'model': model,
-        }
+        'model': model,
     }
 
-    # Note: Replace 'YOUR_NESTJS_BACKEND_API_ENDPOINT' with the actual endpoint of your NestJS backend.
     response = requests.post('http://localhost:3000/query', json=query_payload)
 
     if response.status_code in {200, 201}:
@@ -52,8 +45,8 @@ if log_query_button:
 # Second Tab - Dashboard
 st.markdown("# Dashboard Tab")
 
-# Use st.expander for a collapsible sidebar
-with st.sidebar.expander("Query Timestamp"):
+# Expander for Query Timestamp filter
+with st.sidebar.expander("Query Timestamp", expanded=False):
     # Date and Time Input for filtering
     start_date = st.date_input("Start Date", key="start_date")
     start_time = st.time_input("Start Time", key="start_time")
@@ -66,13 +59,18 @@ with st.sidebar.expander("Query Timestamp"):
     # Button to Trigger Query with Filter
     filter_data_button = st.button("Filter Data", key="filter_data_button")
 
-# Function to fetch filtered data
-def filter_data():
-    # Convert start and end dates to Luxon DateTime objects
+# Expander for Number of Tokens filter
+with st.sidebar.expander("Number of Tokens", expanded=False):
+    min_tokens = st.number_input("Min Tokens", value=0, key="min_tokens")
+    max_tokens = st.number_input("Max Tokens", value=100, key="max_tokens")
+
+    # Button to Trigger Query with Token Filter
+    filter_tokens_button = st.button("Filter Data by Tokens", key="filter_tokens_button")
+
+# Function to fetch filtered data by timestamp
+def filter_data_by_timestamp():
     formatted_start_date = start_datetime.isoformat()
     formatted_end_date = end_datetime.isoformat()
-
-    # print(formatted_start_date, formatted_end_date)
 
     # Send the request with Luxon DateTime objects
     response = requests.get(
@@ -87,8 +85,29 @@ def filter_data():
         filtered_data = response.json()
         st.table(pd.DataFrame(filtered_data))
     else:
-        st.error(f"Error fetching filtered data in Streamlit application: {response.text if hasattr(response, 'text') else 'Unknown error in Streamlit application'}")
+        st.error(f"Error fetching filtered data by timestamp in Streamlit application: {response.text if hasattr(response, 'text') else 'Unknown error'}")
 
-# Trigger filter data function when button is clicked
+# Function to fetch filtered data by tokens
+def filter_data_by_tokens():
+    # Send the request with min and max token values
+    response = requests.get(
+        'http://localhost:3000/filterDataByTokens',
+        params={
+            'minTokens': min_tokens,
+            'maxTokens': max_tokens,
+        }
+    )
+
+    if response.status_code == 200:
+        filtered_data = response.json()
+        st.table(pd.DataFrame(filtered_data))
+    else:
+        st.error(f"Error fetching filtered data by tokens in Streamlit application: {response.text if hasattr(response, 'text') else 'Unknown error'}")
+
+# Trigger filter data function when button is clicked for timestamp
 if filter_data_button:
-    filter_data()
+    filter_data_by_timestamp()
+
+# Trigger filter data function when button is clicked for tokens
+if filter_tokens_button:
+    filter_data_by_tokens()
