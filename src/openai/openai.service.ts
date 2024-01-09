@@ -24,7 +24,7 @@ export class OpenaiService {
     } catch (error) {
       console.error('Error calling OpenAI API:', error.message);
       // throw new Error('Error calling OpenAI API');
-      return { status: '404', content: error.message }
+      return { status: error.message.substring(0, 3), content: error.message }
     }
   }
 }

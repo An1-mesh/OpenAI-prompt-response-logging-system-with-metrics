@@ -1,5 +1,7 @@
 import streamlit as st
 import requests
+import pandas as pd
+from datetime import datetime
 
 # Define the OpenAI models
 openai_models = [
@@ -19,12 +21,12 @@ environment = st.selectbox("Select Environment:", ["Production", "Development"])
 user = st.text_input("Enter User:")
 
 # Log Query Button
-log_query_button = st.button("Send Query")
+log_query_button = st.button("Send Query", key="log_query_button")
 
 # Function to log query
 def log_query():
     query_payload = {
-        'prompt': prompt,        
+        'prompt': prompt,
         'metadata': {
             'user': user,
             'environment': environment,
@@ -32,16 +34,16 @@ def log_query():
         }
     }
 
-    # response = requests.post('YOUR_NESTJS_BACKEND_API_ENDPOINT', json=query_payload)
     # Note: Replace 'YOUR_NESTJS_BACKEND_API_ENDPOINT' with the actual endpoint of your NestJS backend.
     response = requests.post('http://localhost:3000/query', json=query_payload)
 
-
     if response.status_code in {200, 201}:
         st.success("Query successfully logged to the database")
+        # Output textbox for OpenAI response
+        with st.expander("OpenAI Response", expanded=True):
+            output_textbox = st.text_area(label=" ", value=response.text, height=300, key="output_textbox")
     else:
         st.error(f"Error logging query: {response.text if hasattr(response, 'text') else 'Unknown error'}")
-
 
 # Trigger log query function when button is clicked
 if log_query_button:
@@ -49,4 +51,45 @@ if log_query_button:
 
 # Second Tab - Dashboard
 st.markdown("# Dashboard Tab")
-# Add your code for displaying ClickHouse data and other metrics here
+
+# Sidebar for filtering data
+st.sidebar.header("Filter Options")
+
+# Date and Time Input for filtering
+start_date = st.sidebar.date_input("Start Date", key="start_date")
+start_time = st.sidebar.time_input("Start Time", key="start_time")
+start_datetime = datetime.combine(start_date, start_time)
+
+end_date = st.sidebar.date_input("End Date", key="end_date")
+end_time = st.sidebar.time_input("End Time", key="end_time")
+end_datetime = datetime.combine(end_date, end_time)
+
+# Button to Trigger Query with Filter
+filter_data_button = st.sidebar.button("Filter Data", key="filter_data_button")
+
+# Function to fetch filtered data
+def filter_data():
+    # Convert start and end dates to Luxon DateTime objects
+    formatted_start_date = start_datetime.isoformat()
+    formatted_end_date = end_datetime.isoformat()
+
+    # print(formatted_start_date, formatted_end_date)
+
+    # Send the request with Luxon DateTime objects
+    response = requests.get(
+        'http://localhost:3000/filterData',
+        params={
+            'startDate': formatted_start_date,
+            'endDate': formatted_end_date,
+        }
+    )
+
+    if response.status_code == 200:
+        filtered_data = response.json()
+        st.table(pd.DataFrame(filtered_data))
+    else:
+        st.error(f"Error fetching filtered data in Streamlit application: {response.text if hasattr(response, 'text') else 'Unknown error in Streamlit application'}")
+
+# Trigger filter data function when button is clicked
+if filter_data_button:
+    filter_data()

@@ -1,6 +1,7 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query } from '@nestjs/common';
 import { OpenaiService } from './openai/openai.service';
 import { ClickhouseService } from './clickhouse/clickhouse.service';
+import { DateTime } from 'luxon';
 
 @Controller()
 export class AppController {
@@ -16,9 +17,6 @@ export class AppController {
     try {
       const response = await this.openaiService.queryOpenai(body.prompt, body.metadata.model);
 
-      const status_code = response.status;
-      // console.log(status_code)
-
       // Log to ClickHouse
       await this.clickhouseService.logRequest(body.prompt, response.content, body.metadata, Date.now() - start);
 
@@ -29,6 +27,28 @@ export class AppController {
       // Handle errors
       console.error(error);
       return 'Error processing the OpenAI request!';
+    }
+  }
+
+  // New endpoint for filtered queries
+  @Get('filterData')
+  async getFilteredData(@Query() query: { startDate: string, endDate: string }): Promise<any[]> {
+    try {
+
+      // console.log(query.startDate)
+      // console.log(query.endDate)
+
+      // Convert Luxon DateTime strings to Luxon DateTime objects
+      const startDate = DateTime.fromISO(query.startDate);
+      const endDate = DateTime.fromISO(query.endDate);
+
+      // Your logic to fetch and return filtered sample data from your data source
+      const filteredData = await this.clickhouseService.getFilteredClickhouseData(startDate, endDate);
+
+      return filteredData;
+    } catch (error) {
+      console.error('Error fetching filtered data in the App controller:', error);
+      throw new Error('Error fetching filtered data in the App controller');
     }
   }
 }
