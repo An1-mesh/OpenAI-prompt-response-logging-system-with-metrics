@@ -70,7 +70,7 @@ export class ClickhouseService {
 
       // Extract rows from the result
       const rows = await result.json();
-      console.log('rows:', rows)
+      // console.log('rows:', rows)
 
       return rows as any[];
     } catch (error) {

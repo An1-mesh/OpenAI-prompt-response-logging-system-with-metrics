@@ -52,20 +52,19 @@ if log_query_button:
 # Second Tab - Dashboard
 st.markdown("# Dashboard Tab")
 
-# Sidebar for filtering data
-st.sidebar.header("Filter Options")
+# Use st.expander for a collapsible sidebar
+with st.sidebar.expander("Query Timestamp"):
+    # Date and Time Input for filtering
+    start_date = st.date_input("Start Date", key="start_date")
+    start_time = st.time_input("Start Time", key="start_time")
+    start_datetime = datetime.combine(start_date, start_time)
 
-# Date and Time Input for filtering
-start_date = st.sidebar.date_input("Start Date", key="start_date")
-start_time = st.sidebar.time_input("Start Time", key="start_time")
-start_datetime = datetime.combine(start_date, start_time)
+    end_date = st.date_input("End Date", key="end_date")
+    end_time = st.time_input("End Time", key="end_time")
+    end_datetime = datetime.combine(end_date, end_time)
 
-end_date = st.sidebar.date_input("End Date", key="end_date")
-end_time = st.sidebar.time_input("End Time", key="end_time")
-end_datetime = datetime.combine(end_date, end_time)
-
-# Button to Trigger Query with Filter
-filter_data_button = st.sidebar.button("Filter Data", key="filter_data_button")
+    # Button to Trigger Query with Filter
+    filter_data_button = st.button("Filter Data", key="filter_data_button")
 
 # Function to fetch filtered data
 def filter_data():
