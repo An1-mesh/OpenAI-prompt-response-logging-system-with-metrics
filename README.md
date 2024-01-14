@@ -1,4 +1,4 @@
-TODO: Integrate the web application frontend using Streamlit
+TODO: Integrate the web application frontend with the TypeScript backend using Streamlit, and enhance the webpage UI
 
 
 <p align="center">
