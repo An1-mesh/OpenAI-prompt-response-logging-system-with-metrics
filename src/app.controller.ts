@@ -18,7 +18,7 @@ export class AppController {
       const response = await this.openaiService.queryOpenai(body.prompt, body.model);
 
       // Log to ClickHouse
-      await this.clickhouseService.logRequest(body.prompt, response.content, body.model, Date.now() - start);
+      // await this.clickhouseService.logRequest(body.prompt, response.content, body.model, Date.now() - start);
 
       console.log('OpenAI query and Clickhouse logging successful!');
 

@@ -4,7 +4,7 @@ import { OpenAI } from 'openai';
 @Injectable()
 export class OpenaiService {
   private readonly openai = new OpenAI({
-    apiKey: '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',
+    apiKey: process.env.OPENAI_KEY,
   });
 
   async queryOpenai(prompt: string, model: string): Promise<Record<string, string>> {

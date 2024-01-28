@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { createClient, ClickHouseClient, ClickHouseLogLevel } from '@clickhouse/client';
-import { v4 as uuidv4 } from 'uuid';
 import { DateTime } from 'luxon';
 
 @Injectable()
@@ -9,10 +8,10 @@ export class ClickhouseService {
 
   constructor() {
     this.client = createClient({
-      host: 'https://fn676uyydp.ap-south-1.aws.clickhouse.cloud:8443',
-      username: 'default',
-      password: 'jAqaF_IO86uKF',
-      database: 'Prompt_Logging_DB',
+      host: process.env.CLICKHOUSE_HOST,
+      username: process.env.CLICKHOUSE_USERNAME,
+      password: process.env.CLICKHOUSE_PWD,
+      database: process.env.DB,
       log: {
         level: ClickHouseLogLevel.WARN,
       }
@@ -26,7 +25,7 @@ export class ClickhouseService {
 
       // Execute the INSERT query
       await this.client.insert({
-        table: 'logs',
+        table: process.env.CLICKHOUSE_TABLE,
         format: 'JSON',
         values: [{
           created_at: new Date(),
