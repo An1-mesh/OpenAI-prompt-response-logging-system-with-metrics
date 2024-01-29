@@ -1,42 +1,30 @@
-TODO: Integrate the web application frontend with the TypeScript backend using Streamlit, and enhance the webpage UI
+# Description
+This is a web application for a prompt response logging system. It consists of a proxy layer which: 
+1. Queries OpenAI and returns the response to the user.
+2. Logs the request to Clickhouse database along with relevant metadata.
+3. Shows the requests and other related statistics on a dashboard.
 
+TODO: Add more filters with statistics such as total failures, average latency, p95 latency, tokens per second etc. on the UI.
 
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Tech Stack
+1. Backend Server:- TypeScript and [NestJS](https://github.com/nestjs/nest)
+2. Database:- [ClickHouse](https://clickhouse.com/docs)
+3. Frontend (Query page and Dashboard):- [Streamlit](https://docs.streamlit.io)
+4. API:- [OpenAI](https://platform.openai.com/docs)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Getting Started
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
+### 1. Install NestJS
 ```bash
 $ npm install
 ```
 
-## Running the app
+### 2. Install Streamlit
+```bash
+$ pip install streamlit
+```
 
+### 3. Start the NestJS server
 ```bash
 # development
 $ npm run start
@@ -48,29 +36,33 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
-
+### 4. Run the Streamlit application
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+$ streamlit run app_name.py
 ```
 
-## Support
+### 5. Install and setup ClickHouse
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### 6. Setup `.env` file
+Make sure your .env file contains all the necessary API keys. I have provided an example with sample keys.
 
-## Stay in touch
+# About ClickHouse
+[ClickHouse](https://clickhouse.com/docs) is an SQL database.
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+# About Streamlit
+[Streamlit](https://docs.streamlit.io) is an open-source Python framework for web applications.
 
-## License
+# About NestJS
 
-Nest is [MIT licensed](LICENSE).
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+</p>
+
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
+
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+</p>
