@@ -43,6 +43,8 @@ $ streamlit run app_name.py
 
 ### 5. Install and setup ClickHouse
 
+[Quick Start](https://clickhouse.com/docs/en/getting-started/quick-start)
+
 ### 6. Setup `.env` file
 Make sure your .env file contains all the necessary API keys. I have provided an example with sample keys.
 
