@@ -1,5 +1,7 @@
 # Description
-This is a web application for a prompt response logging system. It consists of a proxy layer which: 
+This is a web application for a prompt response logging system made using TypeScript, NestJS, ClickHouse and Streamlit.
+
+It consists of a proxy layer which: 
 1. Queries OpenAI and returns the response to the user.
 2. Logs the request to Clickhouse database along with relevant metadata.
 3. Shows the requests and other related statistics on a dashboard.
